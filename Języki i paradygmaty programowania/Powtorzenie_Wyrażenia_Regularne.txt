@@ -1,0 +1,9 @@
+1. (A..Za..z)*a(A..Za..z)*b(A..Za..z)* + (A..Za..z)*b(A..Za..z)*a(A..Za..z)*
+2. a(A..Za..z)*b
+3. (A..Za..z)^5
+4. (A..Za..z)^6(A..Za..z)*
+5. (A..Z)(A..Za..z)*
+6. (A..Zb..z)*a(A..Zb..z)*a(A..Zb..z)*a(A..Zb..z)*
+7. (A..Za..z)*(A..Za..z)(cat+dog)(A..Za..z)(A..Za..z)* + (A..Za..z)*(A..Za..z)(cat+dog)(A..Za..z)* + (A..Za..z)*(cat+dog)(A..Za..z)(A..Za..z)*  
+8. (A..Za..z)*(a+e+i+o+u+y+A+E+I+O+U+Y)(A..Za..z)(A..Za..z)* 
+9. (A..Za..z)*((A..Za..z)(A..Z)(A..Za..z)(A..Z)(A..Za..z)e)(A..Za..z)*

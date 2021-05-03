@@ -1,0 +1,120 @@
+def calculate(condition, args):
+    if condition in args:
+        return 1
+    if condition[0] == "~":
+        if condition[1:] in args:
+            return 0
+        truecondition = condition[1:]
+    else:
+        if "~" + condition in args:
+            return 0
+        truecondition = condition
+    a = dictionary[truecondition]
+    b = []
+
+    for x in a:
+        b.append(x[0])
+    for x in args:
+        if x[0] == "~":
+            b = [b[y] for y in range(len(b)) if x[1:] not in b[y]]
+        else:
+            b = [b[y] for y in range(len(b)) if "~" + x not in b[y]]
+    suma = 0
+    for x in b:
+        temp_suma = float([dictionary[truecondition][y][1] for y in range(len(dictionary[truecondition])) if
+                           dictionary[truecondition][y][0] == x][0])
+        print(x, temp_suma)
+        for i in x:
+            if i not in args:
+                if i in cant:
+                    if i[0] == '~':
+                        temp_suma *= 1 - float(dictionary[i[1:]][0][1])
+                    else:
+                        temp_suma *= float(dictionary[i][0][1])
+                else:
+                    temp_suma *= calculate(i, args)
+        suma += temp_suma
+    if condition[0] == "~":
+        return 1 - suma
+    else:
+        return suma
+
+
+with open("bayes.txt", mode='r', encoding='utf-8') as my_file:
+    file = my_file.readlines()
+
+file = [x.strip() for x in file]
+
+nodes = file[1]
+
+dependencies = file[3][1:-1].split("),(")
+
+attackers = []
+defenders = []
+
+for x in dependencies:
+    attackers.append(x.split(',')[0])
+    defenders.append(x.split(',')[1])
+
+dictionary = {}
+
+for x in range(5, len(file)):
+    c = file[x].split("=")[1].strip()
+    b = file[x].split("=")[0].strip()[2:-1]
+    if '|' in b:
+        a = b.split('|')[0]
+        b = b.split('|')[1].split(',')
+    else:
+        a = b
+        b = []
+    if dictionary.get(a) is None:
+        dictionary[a] = [[b, c]]
+    else:
+        y = [[b, c]] + dictionary.get(a)
+        dictionary[a] = y
+
+z = True
+
+cant = []
+
+for y in dictionary:
+    if len(dictionary[y]) == 1:
+        cant.append(y)
+        cant.append("~" + y)
+
+a = input("Podaj warunek który chcesz obliczyć np. P(MA|G):")
+
+a = a[2:-1]
+
+if '|' in a:
+    if a.split('|')[0] in cant:
+        print("Dla tego przykładu nie można wykonać obliczeń")
+        z = False
+    else:
+        if a.split("|")[0][0] == '~':
+            temp = a.split('|')[1].split(',')
+            temp_attack = []
+
+            for i in range(len(attackers)):
+                if defenders[i] == a.split('|')[0][1:]:
+                    temp_attack.append(attackers[i])
+                    temp_attack.append("~" + attackers[i])
+
+        else:
+            temp = a.split('|')[1].split(',')
+            temp_attack = []
+
+            for i in range(len(attackers)):
+                if defenders[i] == a.split('|')[0]:
+                    temp_attack.append(attackers[i])
+                    temp_attack.append("~" + attackers[i])
+        for x in a.split("|")[1].split(','):
+            if "~" + x in a.split("|")[1].split(','):
+                print("Nie można Podać warunku i zaprzeczenia warunku jednocześnie")
+                z = False
+                break
+if z is True:
+    if '|' in a:
+        print(calculate(a.split('|')[0], a.split('|')[1].split(',')))
+    else:
+        print(calculate(a, []))
