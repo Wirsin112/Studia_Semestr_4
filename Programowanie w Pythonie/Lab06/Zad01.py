@@ -22,16 +22,12 @@ class Main(QWidget):
         self.button1.clicked.connect(self.GraczVsGracz)
         self.button2 = QPushButton("Komputer vs Gracz")
         self.button2.clicked.connect(self.GraczVsKomputer)
-        self.uklad = QVBoxLayout()
-        self.uklad.setAlignment(self.button1, Qt.AlignTop)
-        self.uklad.setAlignment(self.button2, Qt.AlignTop)
-        self.uklad.setAlignment(self.etykieta, Qt.AlignTop)
+        self.uklad = QGridLayout()
         self.uklad.addWidget(self.etykieta, 0, 0)
         # uklad.addWidget(self.wejscie,3,0)
         # uklad.addWidget(self.wynik,1,0,1,2)
         self.uklad.addWidget(self.button1, 1, 0, 1, 3)
         self.uklad.addWidget(self.button2, 2, 0, 1, 3)
-
         self.setLayout(self.uklad)
         self.setGeometry(20, 20, 300, 100)
         self.setWindowTitle("Menu")
@@ -57,7 +53,7 @@ class Main(QWidget):
         #         # if(i < 4 and j % 2 == 0):
         #         #     tab[i][j].setStyleSheet("background-image : url(white.png); border: none;")
 
-        b1 = QPushButton("1", self)
+        b1 = QLabel("1", self)
         b2 = QPushButton("2", self)
         b2.clicked.connect(self.akcja)
         b3 = QPushButton("3", self)
