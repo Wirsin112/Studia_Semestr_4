@@ -7,11 +7,11 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QPushButton, QFileDialog
 import cv2
 
-class MainWindow(QtWidgets.QMainWindow):
+class Captcha(QtWidgets.QMainWindow):
 
-    def __init__(self):
+    def __init__(self,parent):
         super().__init__()
-
+        self.parent = parent
         top = 400
         left = 400
         width = 200
@@ -35,7 +35,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.last_x, self.last_y = None, None
         self.button = QPushButton("Potwierdz", self)
         self.button.clicked.connect(self.save)
-        self.button.setGeometry(0,425, 200, 75)
+        self.button.setGeometry(0, 425, 200, 75)
+        self.show()
     def mouseMoveEvent(self, e):
         if self.last_x is None: # First event.
             self.last_x = e.x()
@@ -61,7 +62,8 @@ class MainWindow(QtWidgets.QMainWindow):
         print(1)
         cv2.imread("siema.png")
 
-        if self.rmsdiff(cv2.imread("siema.png"),cv2.imread("show.png")):
+        if self.rmsdiff(cv2.imread("siema.png"), cv2.imread("show.png")):
+            self.parent.Register_in_Serwer()
             self.close()
         else:
             self.label.pixmap().fill(QtGui.QColor("white"))
@@ -86,8 +88,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return True
         else:
             return False
-
-app = QtWidgets.QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec_()
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    window = Captcha()
+    window.show()
+    app.exec_()

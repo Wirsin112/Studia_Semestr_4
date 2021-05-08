@@ -41,12 +41,6 @@ class Window(QWidget):
         self.list_widget = QListWidget(self)
         self.list_widget.setGeometry(25, 25, 950, 650)
         self.list_widget.itemClicked.connect(self.Show_Date)
-        # for i in range(20):
-        #     if i == 13 or i == 2:
-        #         item = Wiadomosc(self,"Jan_zamoj", Get_Server_Time(), "Siema sa tu sportowe swiry")
-        #         self.list_widget.addItem(item)
-        #     item = Wiadomosc(self, "Bob", Get_Server_Time(), "Siema sa tu sportowe swiry")
-        #     self.list_widget.addItem(item)
 
         scroll_bar = QScrollBar(self)
         scroll_bar.setStyleSheet("background : Grey;")
@@ -68,14 +62,12 @@ class Window(QWidget):
                 s.connect(("localhost", 8888))
                 s.send(str(["SND",self.user,self.wejscie.text(),Get_Server_Time()]).encode())
                 data = s.recv(1024)
-                print(data.decode())
-                print("witam pana magistra")
-                item = Wiadomosc(self, self.user, Get_Server_Time(), self.wejscie.text())
-                self.list_widget.addItem(item)
+                # item = Wiadomosc(self, self.user, Get_Server_Time(), self.wejscie.text())
+                # self.list_widget.addItem(item)
             except(error):
                 print(error)
-
-            #
+    def Recive_Messenge(self):
+        pass
 if __name__ == "__main__":
     App = QApplication(sys.argv)
     win = Window("siema","siema2")

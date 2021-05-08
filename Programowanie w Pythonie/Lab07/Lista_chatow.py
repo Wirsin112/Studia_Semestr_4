@@ -37,7 +37,7 @@ class Chat_List(QWidget):
         self.Init_Window()
         self.Init_rest()
         self.lista_chatow = []
-
+        self.Init_Chat_Names()
     def Wait_Thread(self):
         pass
     def Init_Window(self):
@@ -48,13 +48,6 @@ class Chat_List(QWidget):
         self.list_widget = QListWidget(self)
         self.list_widget.setGeometry(25, 25, 250, 250)
         self.list_widget.itemDoubleClicked.connect(self.Open_Chat_Window)
-        for i in range(3):
-            if i == 1 or i == 2:
-                item = Przemiot_Dyskusji(self,"Jan_zamoj")
-                self.list_widget.addItem(item)
-            item = Przemiot_Dyskusji(self, "Bob")
-            self.list_widget.addItem(item)
-
         scroll_bar = QScrollBar(self)
         scroll_bar.setStyleSheet("background : Grey;")
         self.list_widget.setVerticalScrollBar(scroll_bar)
@@ -64,6 +57,16 @@ class Chat_List(QWidget):
         wyslij.clicked.connect(self.siema)
         wyslij.setGeometry(25, 375, 250, 50)
         self.show()
+
+    def Init_Chat_Names(self):
+        s = socket(AF_INET, SOCK_STREAM)
+        s.connect(("localhost", 8888))
+        s.send(str(["GCL"]).encode())
+        data = s.recv(1024)
+        s.close()
+        for i in eval(data.decode()):
+            item = Przemiot_Dyskusji(self, i)
+            self.list_widget.addItem(item)
     def Open_Chat_Window(self,item):
         item = Window(item.title,self.user)
         self.lista_chatow.append(item)
