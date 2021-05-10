@@ -48,8 +48,6 @@ class Captcha(QtWidgets.QMainWindow):
         painter.drawLine(self.last_x, self.last_y-225, e.x(), e.y()-225)
         painter.end()
         self.update()
-
-        # Update the origin for next time.
         self.last_x = e.x()
         self.last_y = e.y()
 

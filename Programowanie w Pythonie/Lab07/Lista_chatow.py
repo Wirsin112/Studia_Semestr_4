@@ -1,28 +1,44 @@
-from datetime import datetime
-from PyQt5.QtCore import Qt
+from _thread import *
+import threading
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QWidget, \
     QListWidgetItem, QScrollBar, QListWidget, QLineEdit
 import sys
 from socket import *
-from User_Class import Window
+from User_Class import Window, Wiadomosc
 
 
-def Wait_For_Call():
+def Wait_For_Call(parent):
     s = socket(AF_INET, SOCK_STREAM)
     s.connect(("localhost", 8888))
+    answer = str(["CON"])
+    s.send(answer.encode())
     while 1:
-        if s.recv(1024):
+        try:
             data = s.recv(1024)
+            if data.decode():
+                if eval(data.decode())[0] == "CAT":
+                    print(data.decode())
+                    item = Przemiot_Dyskusji(parent, eval(data.decode())[1])
+                    parent.list_widget.addItem(item)
+                if eval(data.decode())[0] == "MES":
+                    for i in parent.lista_chatow:
+                        if i.title == eval(data.decode())[4]:
+                            print(data.decode())
+                            item = Wiadomosc(i, eval(data.decode())[1], eval(data.decode())[3], eval(data.decode())[2])
+                            i.list_widget.addItem(item)
+        except():
+            pass
     s.close()
 
 
 class Przemiot_Dyskusji(QListWidgetItem):
-    def __init__(self,parent,title):
+    def __init__(self, parent, title):
         super().__init__(title)
         self.title = title
         self.parent = parent
         self.setFont(QFont('Arial', 25))
+
 
 class Chat_List(QWidget):
     def __init__(self, user_name):
@@ -38,8 +54,13 @@ class Chat_List(QWidget):
         self.Init_rest()
         self.lista_chatow = []
         self.Init_Chat_Names()
+        x = threading.Thread(target=Wait_For_Call, args=(self,))
+        x.start()
+        print("out")
+
     def Wait_Thread(self):
         pass
+
     def Init_Window(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.top, self.left, self.width, self.height)
@@ -52,7 +73,7 @@ class Chat_List(QWidget):
         scroll_bar.setStyleSheet("background : Grey;")
         self.list_widget.setVerticalScrollBar(scroll_bar)
         self.wejscie = QLineEdit(self)
-        self.wejscie.setGeometry(25,300,250,50)
+        self.wejscie.setGeometry(25, 300, 250, 50)
         wyslij = QPushButton("Dodaj chat", self)
         wyslij.clicked.connect(self.siema)
         wyslij.setGeometry(25, 375, 250, 50)
@@ -61,26 +82,29 @@ class Chat_List(QWidget):
     def Init_Chat_Names(self):
         s = socket(AF_INET, SOCK_STREAM)
         s.connect(("localhost", 8888))
-        s.send(str(["GCL"]).encode())
+        s.send(str(["GCL", self.title]).encode())
         data = s.recv(1024)
         s.close()
         for i in eval(data.decode()):
             item = Przemiot_Dyskusji(self, i)
             self.list_widget.addItem(item)
-    def Open_Chat_Window(self,item):
-        item = Window(item.title,self.user)
+
+    def Open_Chat_Window(self, item):
+        item = Window(item.title, self.user)
         self.lista_chatow.append(item)
         print(self.lista_chatow)
+
     def siema(self):
-        item = Przemiot_Dyskusji(self,self.wejscie.text())
-        self.list_widget.addItem(item)
-        self.wejscie.setText("")
-        if self.lista_chatow[0].isHidden():
-            print("hidden")
+        if self.wejscie.text() != "":
+            print("1")
+            s = socket(AF_INET, SOCK_STREAM)
+            s.connect(("localhost", 8888))
+            s.send(str(["NTA", self.wejscie.text()]).encode())
+            s.close()
+            self.wejscie.setText("")
+
+
 if __name__ == "__main__":
     App = QApplication(sys.argv)
     window = Chat_List("Fan Legi")
     sys.exit(App.exec())
-
-
-
