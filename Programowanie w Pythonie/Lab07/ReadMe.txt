@@ -1,0 +1,2 @@
+Trzeba odpalić plik Serwer_start.py znajdujący się w folderze Serwer a potem login.py w raie co są konta login:admin haslo:admin i login:admin2 haslo:admin2 
+ale poleceam kliknąć register. Nie zabespiczalem i mozna zrobic konto z pustym loginem i haslem zeby sobie przyspieszyc testowanie
