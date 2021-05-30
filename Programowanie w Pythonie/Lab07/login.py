@@ -15,7 +15,7 @@ class Window(QMainWindow):
         self.top = 400
         self.left = 400
         self.width = 200
-        self.height = 200vv
+        self.height = 200
         self.InitWindow()
         self.captcha = None
         self.log_in_memory = ""

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+    <head>
+        <title>Python Flask App</title>
+    </head>
+    <body>
+        <h1>Python Flask App</h1>
+        <form method="POST">
+            {% for q in questions %}
+                <p>
+                    {{ q.q }}
+                    <br>
+                    {% set qnr = loop.index0 %}
+                    {% for o in q.o %}
+                        <label>
+                            <input type="radio" value="{{ o }}" name="{{ qnr }}">
+                            {{ o }}
+                        </label>
+                        <br>
+                        <br>
+                    {% else %}
+                        <input type="text" name="{{ qnr }}">
+                    {% endfor %}
+                </p>
+            {% endfor %}
+            <button type="submit">Send</button>
+        </form>
+    </body>
+</html>
