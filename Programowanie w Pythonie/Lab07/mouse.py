@@ -88,6 +88,6 @@ class Captcha(QtWidgets.QMainWindow):
             return False
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = Captcha()
+    window = Captcha(123)
     window.show()
     app.exec_()
